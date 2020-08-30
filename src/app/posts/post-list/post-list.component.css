@@ -1,0 +1,6 @@
+/* Alveja o proprio elemento */
+:host {
+  /* Elemento é visto como inline, necessario converter pra block */
+  display: block;
+  margin-top: 1rem;
+}
