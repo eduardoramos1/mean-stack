@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   templateUrl: './post-list.component.html',
@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./post-list.component.css'],
 })
 export class PostListComponent {
-  posts = [];
+  // Permite receber valor de props
+  @Input() posts = [];
 }
