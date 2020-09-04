@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { PostService } from './../post.service';
+import { Component } from '@angular/core';
 import { Post } from './../post.model';
 import { NgForm } from '@angular/forms';
 
@@ -11,8 +12,7 @@ export class PostCreateComponent {
   enteredTitle = '';
   enteredContent = '';
 
-  // para criar um evento de emissao
-  @Output() postCreated = new EventEmitter<Post>();
+  constructor(public postService: PostService) {}
 
   onAddPost(form: NgForm) {
     if (!form.valid) return;
@@ -21,7 +21,6 @@ export class PostCreateComponent {
       content: form.value.content,
     };
 
-    // Emite um evento para um componenente que esteja em listening
-    this.postCreated.emit(post);
+    this.postService.addPost(post);
   }
 }
