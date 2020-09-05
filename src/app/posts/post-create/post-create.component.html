@@ -7,6 +7,7 @@
         name="title"
         ngModel
         #title="ngModel"
+        placeholder="Título"
         required
       />
       <mat-error *ngIf="title.invalid">Título inválido</mat-error>
@@ -14,9 +15,10 @@
     <mat-form-field>
       <textarea
         matInput
-        rows="6"
+        cols="6"
         name="content"
         ngModel
+        placeholder="Conteúdo"
         required
         minlength="3"
         #content="ngModel"
