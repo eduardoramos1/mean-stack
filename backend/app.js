@@ -1,4 +1,8 @@
 const app = require("express")();
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   // corrige erro de Cors
@@ -14,7 +18,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/posts", (req, res, next) => {
+app.post("/api/posts", (req, res, next) => {
+  console.log(req.body);
+  res.status(201).json({
+    message: "Post incluido com sucesso",
+  });
+});
+
+app.get("/api/posts", (req, res, next) => {
   const posts = [
     {
       id: "asdasdsa",

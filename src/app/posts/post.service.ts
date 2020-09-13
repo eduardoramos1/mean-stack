@@ -29,8 +29,12 @@ export class PostService {
   }
 
   addPost(post: Post) {
-    this.posts.push(post);
-    // Emite evento para ser escutado por outro valor
-    this.postsUpdated.next([...this.posts]);
+    this.http
+      .post<{ message: string }>('http://localhost:3000/api/posts', post)
+      .subscribe((res) => {
+        this.posts.push(post);
+        // Emite evento para ser escutado por outro valor
+        this.postsUpdated.next([...this.posts]);
+      });
   }
 }
