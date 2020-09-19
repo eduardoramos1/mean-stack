@@ -1,5 +1,22 @@
 const app = require("express")();
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+
+const Post = require("./models/post");
+
+mongoose
+  .connect(
+    "mongodb+srv://eduardo:bWwBxDUhL0HBjFop@cluster0.dbezk.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .then(() => console.log("Conexão com banco de dados funcionando"))
+  .catch((err) => {
+    console.log("Houve um erro ao tentar a conexão");
+    console.error(err);
+  });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,7 +36,11 @@ app.use((req, res, next) => {
 });
 
 app.post("/api/posts", (req, res, next) => {
-  console.log(req.body);
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content,
+  });
+  console.log(post);
   res.status(201).json({
     message: "Post incluido com sucesso",
   });
