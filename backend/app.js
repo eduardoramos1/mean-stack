@@ -6,7 +6,7 @@ const Post = require("./models/post");
 
 mongoose
   .connect(
-    "mongodb+srv://eduardo:bWwBxDUhL0HBjFop@cluster0.dbezk.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    "mongodb+srv://eduardo:bWwBxDUhL0HBjFop@cluster0.dbezk.mongodb.net/MeanStack?retryWrites=true&w=majority",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -40,7 +40,9 @@ app.post("/api/posts", (req, res, next) => {
     title: req.body.title,
     content: req.body.content,
   });
-  console.log(post);
+
+  post.save();
+
   res.status(201).json({
     message: "Post incluido com sucesso",
   });
