@@ -1,5 +1,6 @@
 const app = require("express")();
 const bodyParser = require("body-parser");
+const { error } = require("console");
 const mongoose = require("mongoose");
 
 const Post = require("./models/post");
@@ -49,27 +50,18 @@ app.post("/api/posts", (req, res, next) => {
 });
 
 app.get("/api/posts", (req, res, next) => {
-  const posts = [
-    {
-      id: "asdasdsa",
-      title: "Primeiro server-side post",
-      content: "Primeiro conteudo server-side",
-    },
-    {
-      id: "sASA",
-      title: "Segundo server-side post",
-      content: "Segundo conteudo server-side",
-    },
-    {
-      id: "daDASas",
-      title: "Terceiro server-side post",
-      content: "Terceiro conteudo server-side",
-    },
-  ];
-  res.status(200).json({
-    message: "Posts retornados com sucesso!",
-    posts,
-  });
+  Post.find()
+    .then((posts) => {
+      console.log(posts);
+      res.status(200).json({
+        message: "Posts retornados com sucesso!",
+        posts,
+      });
+    })
+    .catch((err) => {
+      console.log("Não foi possivel buscar dados");
+      console.error(err);
+    });
 });
 
 module.exports = app;
