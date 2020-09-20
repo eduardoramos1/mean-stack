@@ -40,8 +40,12 @@ export class PostService {
 
   addPost(post: Post) {
     this.http
-      .post<{ message: string }>('http://localhost:3000/api/posts', post)
+      .post<{ message: string; post: any }>(
+        'http://localhost:3000/api/posts',
+        post
+      )
       .subscribe((res) => {
+        post.id = res.post._id;
         this.posts.push(post);
         // Emite evento para ser escutado por outro valor
         this.postsUpdated.next([...this.posts]);
@@ -50,7 +54,8 @@ export class PostService {
 
   deletePost(id: string) {
     this.http.delete(`http://localhost:3000/api/posts/${id}`).subscribe(() => {
-      console.log('Excluido com sucesso');
+      this.posts = this.posts.filter((post) => post.id !== id);
+      this.postsUpdated.next([...this.posts]);
     });
   }
 }

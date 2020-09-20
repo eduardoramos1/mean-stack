@@ -42,10 +42,11 @@ app.post("/api/posts", (req, res, next) => {
     content: req.body.content,
   });
 
-  post.save();
-
-  res.status(201).json({
-    message: "Post incluido com sucesso",
+  post.save().then((result) => {
+    res.status(201).json({
+      message: "Post incluido com sucesso",
+      post: result,
+    });
   });
 });
 
