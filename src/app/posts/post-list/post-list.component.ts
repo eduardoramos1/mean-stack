@@ -16,9 +16,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   // Permite que o observable desapareça quando o componente deixar de existir, se não o observarble sempre estará ativo. Criando uma memory leak
   private postsSub: Subscription;
 
-  constructor(public postService: PostService) {
-    postService;
-  }
+  constructor(public postService: PostService) {}
 
   ngOnInit() {
     this.postService.getPosts();
