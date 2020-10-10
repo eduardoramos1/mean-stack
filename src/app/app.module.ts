@@ -1,3 +1,4 @@
+import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -25,6 +26,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
   imports: [
     BrowserModule,
     FormsModule,
+    AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
     MatCardModule,
