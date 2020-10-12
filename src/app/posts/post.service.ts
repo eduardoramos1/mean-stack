@@ -42,18 +42,26 @@ export class PostService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(post: Post) {
+  addPost(title: string, content: string) {
     this.http
-      .post<{ message: string; post: any }>(
-        'http://localhost:3000/api/posts',
-        post
-      )
+      .post<{ message: string; post: any }>('http://localhost:3000/api/posts', {
+        title,
+        content,
+      })
       .subscribe((res) => {
-        post.id = res.post._id;
-        this.posts.push(post);
         // Emite evento para ser escutado por outro valor
         this.postsUpdated.next([...this.posts]);
       });
+  }
+
+  updatePost(id: string, title: string, content: string) {
+    const post = {
+      title,
+      content,
+    };
+    this.http
+      .put(`http://localhost:3000/api/posts/${id}`, post)
+      .subscribe((res) => console.log(res));
   }
 
   deletePost(id: string) {

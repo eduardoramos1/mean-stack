@@ -12,9 +12,9 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 export class PostCreateComponent implements OnInit {
   enteredTitle = '';
   enteredContent = '';
+  post: Post;
   private mode = 'create';
   private id: string;
-  private post: Post;
 
   constructor(public postService: PostService, public route: ActivatedRoute) {}
 
@@ -33,15 +33,25 @@ export class PostCreateComponent implements OnInit {
     });
   }
 
-  onAddPost(form: NgForm) {
+  onSavePost(form: NgForm) {
     if (!form.valid) return;
+
     const post: Post = {
       id: null,
       title: form.value.title,
       content: form.value.content,
     };
 
-    this.postService.addPost(post);
+    if (this.mode === 'create') {
+      this.postService.addPost(form.value.title, form.value.content);
+    } else {
+      this.postService.updatePost(
+        this.id,
+        form.value.title,
+        form.value.content
+      );
+    }
+
     form.resetForm();
   }
 }
