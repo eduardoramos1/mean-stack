@@ -10,3 +10,8 @@ li {
 .spacer {
   flex: 1 1 0;
 }
+
+.nav-active {
+  border-radius: 0;
+  border-bottom: 1px solid white;
+}
