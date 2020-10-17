@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 export class PostListComponent implements OnInit, OnDestroy {
   // Permite receber valor de props
   posts: Post[] = [];
+  loading: boolean = false;
 
   // Permite que o observable desapareça quando o componente deixar de existir, se não o observarble sempre estará ativo. Criando uma memory leak
   private postsSub: Subscription;
@@ -20,10 +21,13 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.postService.getPosts();
+
+    this.loading = true;
     this.postsSub = this.postService
       .getPostUpdateListener()
       .subscribe((posts: Post[]) => {
         this.posts = posts;
+        this.loading = false;
       });
   }
 
