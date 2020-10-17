@@ -23,8 +23,8 @@ router.put("/:id", (req, res, next) => {
     title: req.body.title,
     content: req.body.content,
   });
-  Post.updateOne({ _id: req.params.id }, post).then((res) => {
-    console.log(res);
+  Post.updateOne({ _id: req.params.id }, post).then((post) => {
+    console.log(post);
     res.status(200).json({ message: "Post atualizado!" });
   });
 });
