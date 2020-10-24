@@ -1,7 +1,7 @@
 import { PostService } from './../post.service';
 import { Component, OnInit } from '@angular/core';
 import { Post } from './../post.model';
-import { NgForm } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
@@ -13,6 +13,7 @@ export class PostCreateComponent implements OnInit {
   enteredTitle = '';
   enteredContent = '';
   post: Post;
+  form: FormGroup;
   private mode = 'create';
   private id: string;
   loading: boolean = false;
@@ -20,6 +21,15 @@ export class PostCreateComponent implements OnInit {
   constructor(public postService: PostService, public route: ActivatedRoute) {}
 
   ngOnInit() {
+    this.form = new FormGroup({
+      title: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(3)],
+      }),
+      content: new FormControl(null, {
+        validators: [Validators.required],
+      }),
+    });
+
     // verifica se a url mudou
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       // verifica se tem o parametro 'id' se tiver, vai tratar componente em modo de edição
@@ -35,6 +45,11 @@ export class PostCreateComponent implements OnInit {
             content: postData.content,
           };
 
+          this.form.setValue({
+            title: this.post.title,
+            content: this.post.content,
+          });
+
           this.loading = false;
         });
       } else {
@@ -44,23 +59,23 @@ export class PostCreateComponent implements OnInit {
     });
   }
 
-  onSavePost(form: NgForm) {
-    if (!form.valid) return;
+  onSavePost() {
+    if (this.form.invalid) return;
 
     const post: Post = {
       id: null,
-      title: form.value.title,
-      content: form.value.content,
+      title: this.form.value.title,
+      content: this.form.value.content,
     };
 
     this.loading = true;
     if (this.mode === 'create') {
-      this.postService.addPost(form.value.title, form.value.content);
+      this.postService.addPost(this.form.value.title, this.form.value.content);
     } else {
       this.postService.updatePost(
         this.id,
-        form.value.title,
-        form.value.content
+        this.form.value.title,
+        this.form.value.content
       );
     }
   }
