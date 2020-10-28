@@ -28,6 +28,9 @@ export class PostCreateComponent implements OnInit {
       content: new FormControl(null, {
         validators: [Validators.required],
       }),
+      image: new FormControl(null, {
+        validators: [Validators.required],
+      }),
     });
 
     // verifica se a url mudou
@@ -57,6 +60,16 @@ export class PostCreateComponent implements OnInit {
         this.id = null;
       }
     });
+  }
+
+  onImagePicked(ev: Event) {
+    const file = (ev.target as HTMLInputElement).files[0];
+    // setValue é para inserir valores em todos os campos do form, patchValue para inserir um unico valor
+    this.form.patchValue({ image: file });
+    // Checa validade d o que foi feito em patchValue
+    this.form.get('image').updateValueAndValidity();
+    console.log(file);
+    console.log(this.form);
   }
 
   onSavePost() {
