@@ -14,6 +14,7 @@ export class PostCreateComponent implements OnInit {
   enteredContent = '';
   post: Post;
   form: FormGroup;
+  imagePreview: string;
   private mode = 'create';
   private id: string;
   loading: boolean = false;
@@ -68,8 +69,13 @@ export class PostCreateComponent implements OnInit {
     this.form.patchValue({ image: file });
     // Checa validade d o que foi feito em patchValue
     this.form.get('image').updateValueAndValidity();
-    console.log(file);
-    console.log(this.form);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    };
+
+    reader.readAsDataURL(file);
   }
 
   onSavePost() {

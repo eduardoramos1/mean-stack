@@ -7,7 +7,14 @@ mat-spinner {
   margin: auto;
 }
 
-input[type="file"] 
-{
+input[type="file"] {
   visibility: hidden;
+}
+
+.image-preview {
+  margin-top: 10px;
+}
+
+.image-preview > img {
+  width: 200px;
 }
