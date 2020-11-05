@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Post } from './../post.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { mimeType } from './mime-type.validator';
 
 @Component({
   selector: 'app-post-create',
@@ -31,6 +32,8 @@ export class PostCreateComponent implements OnInit {
       }),
       image: new FormControl(null, {
         validators: [Validators.required],
+        // add meu validator customizado
+        asyncValidators: [mimeType],
       }),
     });
 
@@ -67,7 +70,7 @@ export class PostCreateComponent implements OnInit {
     const file = (ev.target as HTMLInputElement).files[0];
     // setValue é para inserir valores em todos os campos do form, patchValue para inserir um unico valor
     this.form.patchValue({ image: file });
-    // Checa validade d o que foi feito em patchValue
+    // Checa validade do que foi feito em patchValue
     this.form.get('image').updateValueAndValidity();
 
     const reader = new FileReader();
