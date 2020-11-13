@@ -24,6 +24,7 @@ export class PostService {
               title: post.title,
               content: post.content,
               id: post._id,
+              imagePath: post.imagePath,
             };
           });
         })
@@ -52,11 +53,17 @@ export class PostService {
     postData.append('image', image, title);
 
     this.http
-      .post<{ message: string; post: any }>(
+      .post<{ message: string; post: Post }>(
         'http://localhost:3000/api/posts',
         postData
       )
       .subscribe((res) => {
+        const post: Post = {
+          id: res.post.id,
+          title: res.post.title,
+          content: res.post.content,
+          imagePath: res.post.imagePath,
+        };
         // Emite evento para ser escutado por outro valor
         this.postsUpdated.next([...this.posts]);
         this.router.navigate(['/']);
@@ -64,10 +71,11 @@ export class PostService {
   }
 
   updatePost(id: string, title: string, content: string) {
-    const post = {
+    const post: Post = {
       id,
       title,
       content,
+      imagePath: null,
     };
     this.http
       .put(`http://localhost:3000/api/posts/${id}`, post)

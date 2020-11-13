@@ -1,6 +1,7 @@
 const express = require("express");
 // multer permite extrair arquivos enviados pela requisição
 const multer = require("multer");
+const { create } = require("./../models/post");
 const Post = require("./../models/post");
 
 const router = express.Router();
@@ -34,15 +35,21 @@ router.post(
   "",
   multer({ storage: storage }).single("image"),
   (req, res, next) => {
+    // constroi uma url
+    const url = req.protocol + "://" + req.get("host");
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
+      imagePath: url + "/images/" + req.file.filename,
     });
 
-    post.save().then((result) => {
+    post.save().then((createdPost) => {
       res.status(201).json({
         message: "Post incluido com sucesso",
-        post: result,
+        post: {
+          ...createdPost,
+          id: createdPost._id,
+        },
       });
     });
   }
