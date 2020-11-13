@@ -1,7 +1,9 @@
 const app = require("express")();
+const express = require("express");
 const bodyParser = require("body-parser");
 const { error } = require("console");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const postRoutes = require("./routes/posts");
 
@@ -21,6 +23,8 @@ mongoose
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// permite que as images salvas na 'images' sejam carregas em uma requisição
+app.use("/images", express.static(path.join("backend/images")));
 
 app.use((req, res, next) => {
   // corrige erro de Cors
