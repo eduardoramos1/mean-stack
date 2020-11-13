@@ -25,24 +25,28 @@ const storage = multer.diskStorage({
     const name = file.originalname.toLowerCase().split(" ").join("-");
     const extension = MIME_TYPE_MAP[file.mimetype];
     // cosntroi uma imagem com nome único
-    callback(null, name + "-" - Date.now() + "." + extension);
+    callback(null, name + "-" + Date.now() + "." + extension);
   },
 });
 
 // multer vai tentar extrair a única imagem que vai vir da requisição
-router.post("", multer(storage).single("image"), (req, res, next) => {
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content,
-  });
-
-  post.save().then((result) => {
-    res.status(201).json({
-      message: "Post incluido com sucesso",
-      post: result,
+router.post(
+  "",
+  multer({ storage: storage }).single("image"),
+  (req, res, next) => {
+    const post = new Post({
+      title: req.body.title,
+      content: req.body.content,
     });
-  });
-});
+
+    post.save().then((result) => {
+      res.status(201).json({
+        message: "Post incluido com sucesso",
+        post: result,
+      });
+    });
+  }
+);
 
 router.put("/:id", (req, res, next) => {
   const post = new Post({

@@ -45,12 +45,17 @@ export class PostService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(title: string, content: string) {
+  addPost(title: string, content: string, image: File) {
+    const postData = new FormData();
+    postData.append('title', title);
+    postData.append('content', content);
+    postData.append('image', image, title);
+
     this.http
-      .post<{ message: string; post: any }>('http://localhost:3000/api/posts', {
-        title,
-        content,
-      })
+      .post<{ message: string; post: any }>(
+        'http://localhost:3000/api/posts',
+        postData
+      )
       .subscribe((res) => {
         // Emite evento para ser escutado por outro valor
         this.postsUpdated.next([...this.posts]);
