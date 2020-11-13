@@ -1,9 +1,36 @@
 const express = require("express");
+// multer permite extrair arquivos enviados pela requisição
+const multer = require("multer");
 const Post = require("./../models/post");
 
 const router = express.Router();
 
-router.post("", (req, res, next) => {
+const MIME_TYPE_MAP = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+};
+
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    const isValid = MIME_TYPE_MAP[file.mimetype];
+    let error = new Error("Mime type inválido");
+    if (isValid) {
+      error = null;
+    }
+    // caminho é relativo ao arquivo server.js
+    callback(error, "backend/images");
+  },
+  filename: (req, file, callback) => {
+    const name = file.originalname.toLowerCase().split(" ").join("-");
+    const extension = MIME_TYPE_MAP[file.mimetype];
+    // cosntroi uma imagem com nome único
+    callback(null, name + "-" - Date.now() + "." + extension);
+  },
+});
+
+// multer vai tentar extrair a única imagem que vai vir da requisição
+router.post("", multer(storage).single("image"), (req, res, next) => {
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
