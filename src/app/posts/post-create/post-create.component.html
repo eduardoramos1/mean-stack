@@ -15,7 +15,7 @@
       <button mat-stroked-button type="button" (click)="fileInput.click()">
         Escolha uma imagem
       </button>
-      <input type="file" #fileInput (change)="onImagePicked($event)" />
+      <input type="file" formControlName="image" #fileInput (change)="onImagePicked($event)" />
     </div>
     <div
       class="image-preview"

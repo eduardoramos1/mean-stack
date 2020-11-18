@@ -1,11 +1,14 @@
 import { AbstractControl } from '@angular/forms';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, of } from 'rxjs';
 
 // criando validator customizado
 // o '[]' dentro do : Promise<> e Observable<> não indica array, indica um valor cujo nome da chave nao importa, pode ser qualquer coisa
 export const mimeType = (
   control: AbstractControl
 ): Promise<{ [key: string]: any }> | Observable<{ [key: string]: any }> => {
+  if (typeof control.value === 'string') {
+    return of(null);
+  }
   const file = control.value as File;
   const fileReader = new FileReader();
   const frObservable = new Observable(

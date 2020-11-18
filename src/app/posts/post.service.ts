@@ -1,3 +1,4 @@
+import { AppPage } from './../../../e2e/src/app.po';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Post } from './post.model';
@@ -36,9 +37,12 @@ export class PostService {
   }
 
   getPost(id: string) {
-    return this.http.get<{ _id: string; title: string; content: string }>(
-      'http://localhost:3000/api/posts/' + id
-    );
+    return this.http.get<{
+      _id: string;
+      title: string;
+      content: string;
+      imagePath: string;
+    }>('http://localhost:3000/api/posts/' + id);
   }
 
   getPostUpdateListener() {
@@ -70,19 +74,29 @@ export class PostService {
       });
   }
 
-  updatePost(id: string, title: string, content: string) {
-    const post: Post = {
-      id,
-      title,
-      content,
-      imagePath: null,
-    };
+  updatePost(id: string, title: string, content: string, image: File | string) {
+    let postData;
+    if (typeof image === 'object') {
+      postData = new FormData();
+      postData.append('id', id);
+      postData.append('title', title);
+      postData.append('content', content);
+      postData.append('image', image, title);
+    } else {
+      postData = {
+        id,
+        title,
+        content,
+        imagePath: image,
+      } as Post;
+    }
+
     this.http
-      .put(`http://localhost:3000/api/posts/${id}`, post)
+      .put(`http://localhost:3000/api/posts/${id}`, postData)
       .subscribe((res) => {
         const updatedPosts = [...this.posts];
-        const oldPostIndex = updatedPosts.findIndex((p) => p.id === post.id);
-        updatedPosts[oldPostIndex] = post;
+        const oldPostIndex = updatedPosts.findIndex((p) => p.id === id);
+        updatedPosts[oldPostIndex] = postData;
         this.posts = updatedPosts;
         this.postsUpdated.next([...this.posts]);
         this.router.navigate(['/']);
