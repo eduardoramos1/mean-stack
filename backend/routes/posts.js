@@ -79,7 +79,17 @@ router.put(
 );
 
 router.get("", (req, res, next) => {
-  Post.find()
+  // todo valor que vem do parametro da url é string
+  // + converte a string para número
+  const pageSize = +req.query.pagesize;
+  const currentPage = +req.query.page;
+  const postQuery = Post.find();
+
+  // checa se há parametro para paginação e realiza paginação
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  }
+  postQuery
     .then((posts) => {
       console.log(posts);
       res.status(200).json({
