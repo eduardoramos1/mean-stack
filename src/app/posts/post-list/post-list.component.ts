@@ -14,7 +14,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   // Permite receber valor de props
   posts: Post[] = [];
   loading: boolean = false;
-  totalPosts: number = 10;
+  totalPosts: number = 0;
   postsPerPage: number = 2;
   currentPage: number = 1;
   pageSizeOptions: number[] = [1, 2, 5, 10, 25];
@@ -30,17 +30,22 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.postsSub = this.postService
       .getPostUpdateListener()
-      .subscribe((posts: Post[]) => {
-        this.posts = posts;
+      .subscribe((postData: { posts: Post[]; postCount: number }) => {
+        this.posts = postData.posts;
+        this.totalPosts = postData.postCount;
         this.loading = false;
       });
   }
 
   onDelete(id: string) {
-    this.postService.deletePost(id);
+    this.loading = true;
+    this.postService.deletePost(id).subscribe(() => {
+      this.postService.getPosts(this.postsPerPage, this.currentPage);
+    });
   }
 
   onChangedPage(pageData: PageEvent) {
+    this.loading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.postsPerPage = pageData.pageSize;
     this.postService.getPosts(this.postsPerPage, this.currentPage);
