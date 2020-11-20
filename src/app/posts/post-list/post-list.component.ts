@@ -16,6 +16,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   totalPosts: number = 10;
   postsPerPage: number = 2;
+  currentPage: number = 1;
   pageSizeOptions: number[] = [1, 2, 5, 10, 25];
 
   // Permite que o observable desapareça quando o componente deixar de existir, se não o observarble sempre estará ativo. Criando uma memory leak
@@ -24,7 +25,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   constructor(public postService: PostService) {}
 
   ngOnInit() {
-    this.postService.getPosts();
+    this.postService.getPosts(this.postsPerPage, this.currentPage);
 
     this.loading = true;
     this.postsSub = this.postService
@@ -40,7 +41,9 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   onChangedPage(pageData: PageEvent) {
-    console.log(pageData);
+    this.currentPage = pageData.pageIndex + 1;
+    this.postsPerPage = pageData.pageSize;
+    this.postService.getPosts(this.postsPerPage, this.currentPage);
   }
 
   ngOnDestroy() {
